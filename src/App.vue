@@ -18,10 +18,28 @@
 
 <script>
 	import headed from '@/components/header/head.vue'
+	const ERR_ok=0 //成功时的状态码
 	export default {
 		name: 'app',
 		components: {
 			headed
+		},
+		data(){
+			return{
+				seller:{}
+			}
+		},
+		created(){
+			this.$http.get('/api/seller').then((response)=>{
+				//response是一个属性 用body方法转化成json对象(更新后的body转化成json 如果用json方法转化成的是promise对象)
+				response=response.body
+				console.log(response)
+				if(response.errno===ERR_ok){
+					this.seller=response.data
+					console.log(this.seller)
+				}
+				
+			}) 
 		}
 	}
 </script>
