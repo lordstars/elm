@@ -23,12 +23,14 @@ const proxyTable = config.dev.proxyTable
 
 const app = express()
 
+
 //mock数据接口配置
 var appData=require('../data.json')
 var seller=appData.seller
 var goods=appData.goods
 var ratings=appData.ratings
 var apiRoutes=express.Router();
+//使用express的路由模块
 apiRoutes.get('/seller',function(req,res){
 	res.json({
 		errno:0,
@@ -48,8 +50,10 @@ apiRoutes.get('/ratings',function(req,res){
 	})
 });
 app.use('/api',apiRoutes);
-const compiler = webpack(webpackConfig)
+//例如通过'/api/goods'路径可以访问到商品的json数据
 
+
+const compiler = webpack(webpackConfig)
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   quiet: true

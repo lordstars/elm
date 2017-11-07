@@ -4,7 +4,8 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import VueResource from 'vue-resource'
-import cssAll from '@/common/scss/index.css'
+//引入公共样式
+import cssAll from '@/common/scss/index.css'  
 Vue.config.productionTip = false
 Vue.use(VueResource)
 /* eslint-disable no-new */
