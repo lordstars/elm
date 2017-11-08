@@ -50,7 +50,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped="scoped">
 html,body{
 	width: 100%;
 	padding: 0;

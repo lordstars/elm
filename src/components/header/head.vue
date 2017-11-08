@@ -26,6 +26,7 @@
 					<!--头部只显示一条支持的活动数据  所以只去数组中第一条数据-->
 					<span class="text">{{seller.supports[0].description}}</span>
 				</div>
+				
 			</div>
 			<div class="support-count" v-if="seller.supports" @click="showDetail">
 				<span class="count">{{seller.supports.length}}个</span>
@@ -123,7 +124,7 @@
 	}
 </script>
 
-<style  lang="scss">
+<style  lang="scss" scoped="scoped">
 html,body{
 	width: 100%;
 	height: 100%;
@@ -309,19 +310,21 @@ html,body{
 			width: 100%;
 			height: 100%;
 			overflow: auto;
-			
 			background: rgba(7,17,27,0.8);
-			&.fade-enter-active,&.fade-leave-active
+			/*背景模糊 是一种渐进增强的效果 在iphone手机上效果明显*/
+			backdrop-filter:blur(10px);
+			&.fade-enter-active, &.fade-leave-active 
 			{
-				opacity: 1;
+				opacity:1;
 				background: rgba(7,17,27,0.8);
-				transition: all 1s;
+  				transition: all 2s
 			}
-			&.fade-enter, &.fade-leave
+			/*fade-leave-to是离开时的样式*/
+			&.fade-enter, &.fade-leave-to
 			{
 				opacity: 0;
 				background: rgba(7,17,27,0);
-				transition: all 1s;
+				transition: all 2s;
 			}
 			.detail-wrapper
 			{
