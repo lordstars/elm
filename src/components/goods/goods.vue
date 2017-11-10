@@ -1,6 +1,7 @@
 <template>
 <div class="goods">
-	<div class="menu-wrapper">
+	<!--对于需要滚动的元素在方法中需要获取DOM元素,vue2.0中提供了一个绑定元素的属性 ref='元素名' 方法中通过this.$refs.元素名即可获取到当前DOM对象 元素名要用驼峰不能用中划线-->
+	<div class="menu-wrapper" ref="menuWrapper">
 		<ul>
 			<li v-for="item in goods" class="menu-item">
 				<span class="text border-1px">
@@ -12,7 +13,7 @@
 			</li>
 		</ul>
 	</div>
-	<div class="foods-wrapper">
+	<div class="foods-wrapper" ref="foodsWrapper">
 		<ul>
 			<li v-for="item in goods" class="food-list">
 				<!--先取到第一级的商品名称 也就是商品分类-->
@@ -42,10 +43,10 @@
 		</ul>
 	</div>
 </div>
-	
 </template>
 
 <script>
+	import BScroll from 'better-scroll';
 	const ERR_ok=0 
 	export default{
 		name:'goods',
@@ -66,16 +67,29 @@
 				res=res.body 
 				if(res.errno===ERR_ok){
 					this.goods=res.data
-					console.log(this.goods)
+					//console.log(this.goods)
+					//创建时调用初始化滚动的方法 ,但是初始化better-scroll时,因为dom更新是异步的,所以滚动监测到的DOM高度没有改变
+					//DOM异步更新是在$nexTick()这个回调里  所以调用滚动方法需要放在这个异步的回调函数里
+					this.$nextTick(()=>{
+						this.initScroll()
+					})
 				}
 			})
+		},
+		//初始化需要有滚动效果的元素,new一个better-scroll对象   这个方法在创建时调用
+		methods:{
+			initScroll(){
+				//better-scroll接收两个参数,第一个参数是 DOM元素(需要滚动的元素),第二个参数是一个jso对象
+				//通过this.$refs.元素名可以获取到DOM对象
+				this.menuScroll=new BScroll(this.$refs.menuWrapper,{});
+				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{});
+			}
 		}
 	}
 </script>
 
 <style  lang="scss">
-	*
-	{
+	*{
 		padding: 0;
 		margin: 0;
 		font-size: 12px;
@@ -105,6 +119,7 @@
        background-image: url($url+'@3x.png'); 
     }
 }
+/*1像素下边框*/
 @mixin bordered($color)
 {
 	position: relative;
@@ -119,7 +134,7 @@
 		content:'';
 	}
 }
-/*去除一像素*/
+/*去除一像素边框*/
 @mixin bordered-none()
 {
 	&:after
@@ -232,7 +247,7 @@
 					.desc
 					{
 						margin-bottom: 8px;
-						line-height: 10px;
+						line-height: 12px;
 						font-size: 10px;
 						color: rgb(147,153,159);
 					}
@@ -252,7 +267,7 @@
 						line-height: 24px;
 						.now
 						{
-							margin-right: 18px;
+							margin-right: 8px;
 							font-size: 14px;
 							color: rgb(240,20,20);
 							
@@ -268,5 +283,4 @@
 			}
 		}
 	}
-	/*better-scroller运用1*/
 </style>
