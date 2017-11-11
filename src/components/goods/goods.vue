@@ -4,7 +4,8 @@
 	<div class="menu-wrapper" ref="menuWrapper">
 		<ul>
 			<!--动态绑定一个current的类名 因为每个li遍历时都会有一个index值,所以当index值和下面的方法中currentIndex返回的值相同时  代表正在显示当前切换卡的内容即高亮显示-->
-			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}">
+			<!--给li绑定一个点击事件 实现当点击左侧切换卡的时候右侧内容变动  给点击事件内传递一个下标和事件-->
+			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMuen(index,event)">
 				<span class="text border-1px">
 					<!--这里是活动图标 根据后台返回的type数值,如果大于0则显示图标 并且定义一个样式数组 根据type的下标取到对应的样式类名进行绑定-->
 					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
@@ -70,7 +71,7 @@
 		//把这个方法放在计算属性中   因为当DOM在滚动时  他会重新计算高度 实时更新
 		computed:{
 			currentIndex(){
-				for (var i = 0; i < this.listHeight.length; i++) {
+				for (var i = 0; i < this.listHeight.length;i++) {
 					//获取当前索引值对应的高度和下一个索引值的高度
 					let height1=this.listHeight[i]
 					let height2=this.listHeight[i+1]
@@ -109,7 +110,10 @@
 			initScroll(){
 				//better-scroll接收两个参数,第一个参数是 DOM元素(需要滚动的元素 这个元素一定要是外面的一层),第二个参数是一个jso对象
 				//通过this.$refs.元素名可以获取到DOM对象
-				this.menuScroll=new BScroll(this.$refs.menuWrapper,{});
+				this.menuScroll=new BScroll(this.$refs.menuWrapper,{
+					//参数里需要传一个clcik参数  否则左侧不可点击
+					click:true
+				});
 				
 				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{
 					probeType:3    //better-scroll内置的一个属性,传入此参数的目的是 表示 实时监测滚动的位置
@@ -136,6 +140,11 @@
 					height+=foodListH[i].clientHeight
 					this.listHeight.push(height)
 				}
+			},
+			selectMuen(index,event){
+				//此时 因为better-scroll本事给点击事件派生了一个 事件  所以在pc端下会出现重复的事件  
+				console.log(index)
+				
 			}
 
 		}
