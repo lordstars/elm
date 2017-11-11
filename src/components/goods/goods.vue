@@ -3,7 +3,8 @@
 	<!--对于需要滚动的元素在方法中需要获取DOM元素,vue2.0中提供了一个绑定元素的属性 ref='元素名' 方法中通过this.$refs.元素名即可获取到当前DOM对象 元素名要用驼峰不能用中划线-->
 	<div class="menu-wrapper" ref="menuWrapper">
 		<ul>
-			<li v-for="item in goods" class="menu-item">
+			<!--动态绑定一个current的类名 因为每个li遍历时都会有一个index值,所以当index值和下面的方法中currentIndex返回的值相同时  代表正在显示当前切换卡的内容即高亮显示-->
+			<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}">
 				<span class="text border-1px">
 					<!--这里是活动图标 根据后台返回的type数值,如果大于0则显示图标 并且定义一个样式数组 根据type的下标取到对应的样式类名进行绑定-->
 					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
@@ -58,7 +59,32 @@
 		},
 		data(){
 			return{
-				goods:[]
+				goods:[],
+				//定义一个数组存放高度,因为获取的是不同区域的高度,即递增的li的区间高度,而且这个数组的个数可以和左边切换卡个数相对应
+				listHeight:[],
+				//定义一个scrollY 用来存储滚动时实时的高度 用来和区间高度进行比较 从而和左侧的切换卡进行映射 
+				scrollY:0
+			}
+		},
+		//计算属性中 通过这个方法确定左侧切换卡当前应该在那一个上高亮显示(因为这个方法返回的是一个下标值  他返回的下标值代表他右侧显示的是左侧这个下标对应的区域)
+		//把这个方法放在计算属性中   因为当DOM在滚动时  他会重新计算高度 实时更新
+		computed:{
+			currentIndex(){
+				for (var i = 0; i < this.listHeight.length; i++) {
+					//获取当前索引值对应的高度和下一个索引值的高度
+					let height1=this.listHeight[i]
+					let height2=this.listHeight[i+1]
+					//判断实时滚动的y轴坐标是否在当前区间内
+					//还要考虑当遍历到最后一个时  已经超出了数组长度  那么height2将返回undefined 此时也应该返回i
+					if(!height2||(this.scrollY>=height1&&this.scrollY<height2)){
+					//如果是在当前区间内就返回当前下标,即对应左侧的第几个切换卡
+					return i
+					console.log(i)
+					}
+					
+				}
+				//没有滚动就返回0
+				return 0
 			}
 		},
 		created(){
@@ -72,18 +98,46 @@
 					//DOM异步更新是在$nexTick()这个回调里  所以调用滚动方法需要放在这个异步的回调函数里
 					this.$nextTick(()=>{
 						this.initScroll()
+						//DOM更新后计算高度
+						this.caculateHeight()
 					})
 				}
 			})
 		},
-		//初始化需要有滚动效果的元素,new一个better-scroll对象   这个方法在创建时调用
+		//初始化需要有滚动效果的元素,new一个better-scroll对象   这个方法在异步更新DOM时(this.$nextTick 的回调函数中)调用
 		methods:{
 			initScroll(){
-				//better-scroll接收两个参数,第一个参数是 DOM元素(需要滚动的元素),第二个参数是一个jso对象
+				//better-scroll接收两个参数,第一个参数是 DOM元素(需要滚动的元素 这个元素一定要是外面的一层),第二个参数是一个jso对象
 				//通过this.$refs.元素名可以获取到DOM对象
 				this.menuScroll=new BScroll(this.$refs.menuWrapper,{});
-				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{});
+				
+				this.foodsScroll=new BScroll(this.$refs.foodsWrapper,{
+					probeType:3    //better-scroll内置的一个属性,传入此参数的目的是 表示 实时监测滚动的位置
+				});
+				//better-scroll的监听事件(滚动事件,第二个参数传一个位置的参数,这个参数具有x,y两个属性  表示 x y轴坐标)
+				this.foodsScroll.on('scroll',(pos)=>{
+//					将实时滚动的位置的y值赋给定义好的scrollY   并且取整取正 (因为滚动的Y值会有负的)
+					this.scrollY=Math.abs(Math.round(pos.y))
+				})
+			},
+				//实现左右联动,左侧点击右侧自动滑到相应区块
+				//定义一个计算高度的方法
+				//获取每个区块的高度,即右侧每一个li的累加高度()
+			caculateHeight(){
+				//根据类名获取所有的li
+				let foodListH=this.$refs.foodsWrapper.getElementsByClassName('food-list')
+				//因为之后要累加,故先定义一个高度初始化为0
+				let height=0;
+				//将第一个高度放进data里定义好的高度数组里面去
+				this.listHeight.push(height)
+				//因为获取的是每个li的累加高度   所以遍历li的长度
+				for (var i = 0; i < foodListH.length; i++) {
+					//每循环一次都将li的高度累加一次,并且将这个高度依次存进data里定义好的数组里面,即可产生一个递增的区间高度的数组
+					height+=foodListH[i].clientHeight
+					this.listHeight.push(height)
+				}
 			}
+
 		}
 	}
 </script>
@@ -166,6 +220,18 @@
 					height: 54px;
 					line-height: 14px;
 					padding: 0 12px;
+					&.current
+					{
+						/*因为高亮时要把上面的下边框盖着 所以要向上移1像素*/
+						position: relative;
+						margin-top: -1px;
+						background: #FFFFFF;
+						font-weight: 700;
+						.text
+						{
+							@include bordered-none();
+						}
+					}
 					.text
 					{
 						font-size: 12px;
