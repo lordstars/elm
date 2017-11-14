@@ -14,7 +14,8 @@
 				<router-link to='/seller'>商家</router-link>
 			</div>
 		</div>
-		<router-view></router-view>
+		<!--在goods组件中使用时不用在这里传入是因为goods是路由跳转页面可以直接使用  而shopcart是组件形式   所以需要传递-->
+		<router-view :seller="seller"></router-view>
 	</div>
 </template>
 

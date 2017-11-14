@@ -44,11 +44,15 @@
 			</li>
 		</ul>
 	</div>
+	<!--因为组件中需要用到配送费和起送价  所以传入两个参数-->
+	<shopcart :deliveryPrice="seller.deliveryPrice" :minPrice="seller.minPrice"></shopcart>
 </div>
 </template>
 
 <script>
 	import BScroll from 'better-scroll';
+	//引入子组件 后面要写相对路径
+	import shopcart from '@/components/shopcart/shopcart';
 	const ERR_ok=0 
 	export default{
 		name:'goods',
@@ -157,6 +161,9 @@
 				this.foodsScroll.scrollToElement(el,300)
 			}
 
+		},
+		components:{
+			shopcart
 		}
 	}
 </script>

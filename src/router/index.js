@@ -4,7 +4,6 @@ import head from '@/components/header/head'
 import goods from '@/components/goods/goods'
 import seller from '@/components/seller/seller'
 import ratings from '@/components/ratings/ratings'
-
 Vue.use(Router)
 
 export default new Router({
