@@ -16,6 +16,14 @@
 		<!--动态的绑定两个类名  两个类名根据情况切换  传一个payClass计算属性  通过下面计算属性返回不同类名-->
 		<div class="pay" :class="payClass">{{payDesc}}</div>
 	</div>
+	<!--小球滑落动画-->
+	<div class="ball-container">
+		<!--transition动画 分为内外层 分别控制x y方向-->
+		<transition name="drop">
+			<div v-for="ball in balls" v-show="ball.show"></div>
+			<div class="inner"></div>
+		</transition>
+	</div>
 </div>
 </div>
 </template>
@@ -24,13 +32,13 @@
 		name:"shopcart",
 		props:{ 
 			//从goods组件映射一些相应 的商品选择在shopcart组件内实现结算
-			//selectFoods用来存储选择商品的价格和数量信息
+			//selectFoods是从goods组件内传过来的一个被选商品的数组
 			selectFoods:{
 				type:Array,
 			//如果传入的类型一个数组或对象 ,那么默认的状态也要返回一个数组或对象的函数
 				default(){
 					//返回一个数组  
-					return [{price:10,count:3}];
+					return [];
 				}
 			},
 			deliveryPrice:{
@@ -45,7 +53,14 @@
 		},
 		data(){
 			return{
-				
+				balls:
+				[
+					{show:false},
+					{show:false},
+					{show:false},
+					{show:false},
+					{show:false}
+				]
 			}
 		},
 		//计算属性
