@@ -19,7 +19,7 @@
 				</div>
 				<!--运用v-if的原因:
 				1:支持的活动 活动不一定会有  所有用v-if控制
-				2:因为seller是从父组件传过来的对象,而seller是在created发送ajax请求的时候获取的,是异步的,所以在一开				  				     始渲染seller时是一个空对象所以这里自然也获取不到数据-->
+				2:因为seller是从父组件传过来的对象,而seller是在created发送ajax请求的时候获取的,是异步的,所以在一开始渲染seller时是一个空对象所以这里自然也获取不到数据-->
 				<div v-if="seller.supports" class="support">
 					<!--图标显示不同 根据后台返回的type不同显示不同图片定义不同的class  所以动态绑定一个class即:class 因为数据中是返回type,而type是0-4的数字,所以定义一个数组按照0-4对应的图片写一个类名的数组，即获取到type值时就获取到了数组中对应下标的值即类名-->
 					<span class="icon" :class="classMap[seller.supports[0].type]"></span>

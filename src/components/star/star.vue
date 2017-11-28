@@ -5,7 +5,6 @@
 		<span v-for="itemClass in itemClasses" :class="itemClass" class="star-item" track-by='index'></span>
 	</div>
 </template>
-
 <script>
 	const length=5
 	const cls_on='on'
@@ -34,6 +33,7 @@
 //				计算分数是否是小数(控制半星)
 				let hasDecimal=score%1!==0
 //				分数取整(控制全星)
+				
 				let integer=Math.floor(score)
 //				遍历整数,有几个整数就在数组里加入全星的类名
 				for(let i=0;i<integer;i++){

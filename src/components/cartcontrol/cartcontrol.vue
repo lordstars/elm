@@ -1,3 +1,4 @@
+
 <template>
 	<div class="cartcontrol">
 		<!--如果food的数量大于0才让减号按钮显示-->

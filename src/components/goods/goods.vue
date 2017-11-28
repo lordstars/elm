@@ -4,14 +4,13 @@
 		<div class="menu-wrapper" ref="menuWrapper">
 			<ul>
 				<!--动态绑定一个current的类名 因为每个li遍历时都会有一个index值,所以当index值和下面的方法中currentIndex返回的值相同时  代表正在显示当前切换卡的内容即高亮显示-->
-				<!--给li绑定一个点击事件 实现当点击左侧切换卡的时候右侧内容变动  因为会产生多个子li  所以需要给事件传一个特定的index,且传入一个$event对象-->
+				<!--给li绑定一个点击事件 实现当点击左侧切换卡的时候右侧内容变动  因为会产生多个子li所以需要给事件传一个特定的index,且传入一个$event对象-->
 				<li v-for="(item,index) in goods" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMuen(index,$event)">
 					<span class="text border-1px">
 					<!--这里是活动图标 根据后台返回的type数值,如果大于0则显示图标 并且定义一个样式数组 根据type的下标取到对应的样式类名进行绑定-->
 					<span v-show="item.type>0" class="icon" :class="classMap[item.type]"></span>
 					<span>{{item.name}}</span>
 					</span>
-
 				</li>
 			</ul>
 		</div>
@@ -147,7 +146,7 @@
 				});
 				//better-scroll的监听事件(滚动事件,第二个参数传一个位置的参数,这个参数具有x,y两个属性  表示 x y轴坐标)
 				this.foodsScroll.on('scroll', (pos) => {
-					//					将实时滚动的位置的y值赋给定义好的scrollY   并且取整取正 (因为滚动的Y值会有负的)
+				//将实时滚动的位置的y值赋给定义好的scrollY并且取整取正 (因为滚动的Y值会有负的)
 					this.scrollY = Math.abs(Math.round(pos.y))
 				})
 			},
@@ -169,7 +168,7 @@
 				}
 			},
 			selectMuen(index, $event) {
-				//此时 因为better-scroll初始化时设置了click:true,所以浏览器本身派生了一个点击事件  所以在pc端下会出现重复的事件 ,所以解决这个问题需要传入一个$event,与浏览器派发的事件做区别
+				//此时 因为better-scroll初始化时设置了click:true,因为浏览器本身派生了一个点击事件  所以在pc端下会出现重复的事件 ,所以解决这个问题需要传入一个$event,与浏览器派发的事件做区别
 				//如果不是我们派发的事件而是浏览器本身派发的事件(浏览器事件没有_constructed这个属性) 就return  不执行  如果是我们派发的事件才让他继续执行滚动到相应位置
 				if(!event._constructed) {
 					return
@@ -245,7 +244,6 @@
 		}
 	}
 	/*商品区域有一定的可视区域  但是超出部分会隐藏且会滚动并没有滚动条所以需要绝对定位*/
-	
 	.goods {
 		display: flex;
 		position: absolute;
