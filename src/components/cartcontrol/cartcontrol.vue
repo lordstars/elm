@@ -30,25 +30,26 @@
 			console.log(this.food)
 		},
 		methods: {
-			//			添加完事件以后发现页面点击并无效果 是因为这个组件是在goods组件内 而goods组件右侧运用了betterscroll所以不能点击,
-			//			需要在betterScroll初始化的时候设置click才可以点击
-			addCart($event) {
-				//				这里同样是解决pc端下事件重复
+			//添加完事件以后发现页面点击并无效果 是因为这个组件是在goods组件内 而goods组件右侧运用了betterscroll所以不能点击,
+			//需要在betterScroll初始化的时候设置click才可以点击
+			addCart($event){
+			//这里同样是解决pc端下事件重复
 				if(!event._constructed) {
 					return
 				}
 				console.log("click")
-				//初始化默认点击一次后显示数量为1
+			//初始化默认点击一次后显示数量为1
 				if(!this.food.count) {
-					//这里会发现点击页面count区域并不会发生任何变化
-					//是因为food.count本来是没有的属性,在这种情况下并不会变化
-					//这种情况下需要我们通过Vue的set(被添加的对象,'添加的属性名key','属性值value')方法手动添加这样一个属性,需要在js开始先引入vue
+			//这里会发现点击页面count区域并不会发生任何变化
+			//是因为food.count本来是没有的属性,在这种情况下并不会变化
+			//这种情况下需要我们通过Vue的set(被添加的对象,'添加的属性名key','属性值value')方法手动添加这样一个属性,需要在js开始先引入vue
 					Vue.set(this.food, 'count', 1)
 				} else {
-					//每点击数量++
+			//每点击数量++
 					this.food.count++
-
 				}
+				//在点击加号按钮的时候派发一个事件,目的是要将这个dom传进去,在goods父组件中接收
+				this.$dispatch('cart.add',event.target)
 			},
 			decreaseCart() {
 				if(!event._constructed) {
@@ -83,7 +84,7 @@
 			&.move-enter,
 			&.move-leave-to{
 				opacity: 0;
-				/*translate3D内值分别表示x y z三个方向上的位移距离 第一个值是正数代表他的位移是表示从又到左的  负数则是从左到右*/
+				/*translate3D内值分别表示x y z三个方向上的位移距离 第一个值是正数代表他的位移是表示从右到左的  负数则是从左到右*/
 				transform: translate3D(24px, 0, 0);
 				.inner{
 					/*动画完成后旋转是360deg*/

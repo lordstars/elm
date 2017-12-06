@@ -15,17 +15,17 @@
 			</div>
 		</div>
 		<!--在goods组件中使用时不用在这里传入是因为goods是路由跳转页面可以直接使用  而shopcart是组件形式   所以需要传递-->
-		<router-view :seller="seller"></router-view>
+		<router-view :seller="seller" class="zc"></router-view>
 	</div>
 </template>
 
 <script>
 	import headed from '@/components/header/head.vue'  
-//	用到的组件需要引入 在下面注册
+//用到的组件需要引入 在下面注册
 	const ERR_ok=0 //成功时的状态码
 	export default {
 		name: 'app',
-//		引入后,注册需要的组件
+//引入后,注册需要的组件
 		components: {
 			headed
 		},
@@ -35,14 +35,14 @@
 			}
 		},
 		created(){
-//			在创建时发送ajax请求
+//在创建时发送ajax请求
 			this.$http.get('/api/seller').then((response)=>{
 				//response是一个属性 用body方法转化成json对象(更新后的body转化成json 如果用json方法转化成的是promise对象)
 				response=response.body
 				console.log(response)
 				if(response.errno===ERR_ok){
 					this.seller=response.data  
-//					将获取到的数据赋值给定义号的seller对象
+//将获取到的数据赋值给定义号的seller对象
 					console.log(this.seller)
 				}
 				
@@ -94,5 +94,7 @@ html,body{
 			}
 		}
 	}
-	
+	.zc{
+		min-height: 100%;
+	}
 </style>

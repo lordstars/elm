@@ -8,6 +8,9 @@ import VueResource from 'vue-resource'
 import cssAll from '@/common/scss/index.css'  
 Vue.config.productionTip = false
 Vue.use(VueResource)
+import vueg from 'vueg'    
+import 'vueg/css/transition-min.css'
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
@@ -15,3 +18,4 @@ new Vue({
   template: '<App/>',
   components: { App }
 })
+   Vue.use(vueg, router)  
